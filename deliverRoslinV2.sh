@@ -7,6 +7,7 @@ if [ "$#" -lt "1" ]; then
     echo "   usage: deliverRoslinV2.sh PROJECT_DIR [ODIR]"
     echo ""
     echo "     ODIR='.' [DEFAULT]"
+    echo
     exit
 fi
 
@@ -20,14 +21,25 @@ PDIR=$(echo $PDIR | perl -pe 's|/$||')
 BASE=$(basename $PDIR)
 projectNo=$(basename $BASE | perl -ne 'print substr($_,0,-38);')
 
-find $PDIR -type f \
-    | egrep -f $SDIR/DeliverRoslinV2/includeReExpr \
-    | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+ODIR=$ODIR/$projectNo
 
-find $PDIR -type f \
-    | egrep 'qc/.*.txt' | fgrep -v printreads \
-    | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+echo $ODIR
+mkdir -p $ODIR/bams
+mkdir -p $ODIR/docs
+mkdir -p $ODIR/results
+mkdir -p $ODIR/output
 
-find $PDIR -type f \
-    | egrep _request.txt \
-    | xargs -I % ln -s % $ODIR/$projectNo/inputs
+ls $PDIR/bam/*.ba? | xargs -n 1 -I % ln -s % $ODIR/bams
+
+
+# find $PDIR -type f \
+#     | egrep -f $SDIR/DeliverRoslinV2/includeReExpr \
+#     | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+
+# find $PDIR -type f \
+#     | egrep 'qc/.*.txt' | fgrep -v printreads \
+#     | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+
+# find $PDIR -type f \
+#     | egrep _request.txt \
+#     | xargs -I % ln -s % $ODIR/$projectNo/inputs
