@@ -1,0 +1,10 @@
+/bam.*.ba[im]$
+log/settings
+inputs/
+facets.*hisens*.(out|seg|txt)
+facets.*purity*.(out|seg|txt|data.gz)
+facets.*\.png
+portal/
+analysis/
+vcf/
+maf/
