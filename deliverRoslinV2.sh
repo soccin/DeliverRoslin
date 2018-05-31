@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
+BDIR=$SDIR/DeliverRoslinV2
 
 if [ "$#" -lt "1" ]; then
     echo
@@ -30,6 +31,16 @@ mkdir -p $ODIR/results
 mkdir -p $ODIR/output
 
 ls $PDIR/bam/*.ba? | xargs -n 1 -I % ln -s % $ODIR/bams
+ls $PDIR/analysis/* | xargs -n 1 -I % ln -s % $ODIR/results
+convert $PDIR/facets/*hisen*png $ODIR/results/${projectNo}.hisens.CNCF.pdf
+convert $PDIR/facets/*purity*png $ODIR/results/${projectNo}.purity.CNCF.pdf
+Rscript --no-save $BDIR/bindRowsTSV.R \
+    $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
+
+Rscript --no-save $BDIR/bindRowsTSV.R \
+    $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
+
+ln -s $PDIR/portal $ODIR/output
 
 
 # find $PDIR -type f \
