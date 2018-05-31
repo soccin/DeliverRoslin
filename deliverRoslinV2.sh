@@ -32,25 +32,51 @@ mkdir -p $ODIR/output
 
 ls $PDIR/bam/*.ba? | xargs -n 1 -I % ln -s % $ODIR/bams
 ls $PDIR/analysis/* | xargs -n 1 -I % ln -s % $ODIR/results
+
+#
+# FACETS Stuff
+#
 convert $PDIR/facets/*hisen*png $ODIR/results/${projectNo}.hisens.CNCF.pdf
 convert $PDIR/facets/*purity*png $ODIR/results/${projectNo}.purity.CNCF.pdf
-Rscript --no-save $BDIR/bindRowsTSV.R \
-    $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
+# Rscript --no-save $BDIR/bindRowsTSV.R \
+#     $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
 
-Rscript --no-save $BDIR/bindRowsTSV.R \
-    $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
+# Rscript --no-save $BDIR/bindRowsTSV.R \
+#     $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
 
 ln -s $PDIR/portal $ODIR/output
 
+Rscript --no-save $BDIR/collectFacetsOUT.R \
+    $ODIR/results/${projectNo}.purity \
+    $PDIR/facets/*purity.out
 
-# find $PDIR -type f \
-#     | egrep -f $SDIR/DeliverRoslinV2/includeReExpr \
-#     | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+Rscript --no-save $BDIR/collectFacetsOUT.R \
+    $ODIR/results/${projectNo}.hisens \
+    $PDIR/facets/*hisens.out
 
-# find $PDIR -type f \
-#     | egrep 'qc/.*.txt' | fgrep -v printreads \
-#     | xargs -n 1 $SDIR/DeliverRoslinV2/deepSymLink.sh $ODIR/$projectNo
+#
+# Fusions
+#
 
-# find $PDIR -type f \
-#     | egrep _request.txt \
-#     | xargs -I % ln -s % $ODIR/$projectNo/inputs
+ln -s $PDIR/portal/data_fusions.txt $ODIR/results/${projectNo}.fusions.txt
+
+mkdir -p $ODIR/output/qc
+ls $PDIR/qc/*.txt | fgrep -v printreads | xargs -n 1 -I % ln -s % $ODIR/output/qc
+
+mkdir -p $ODIR/output/maf
+ls $PDIR/maf/*.txt | xargs -n 1 -I % ln -s % $ODIR/output/maf
+
+mkdir -p $ODIR/output/vcf
+ls $PDIR/vcf/* | xargs -n 1 -I % ln -s % $ODIR/output/vcf
+
+mkdir -p $ODIR/output/log
+ls $PDIR/log/*.* | xargs -n 1 -I % ln -s % $ODIR/output/log
+
+mkdir -p $ODIR/output/facets
+ls $PDIR/facets/* | fgrep -v Rdata | fgrep -v dat.gz | xargs -n 1 -I % ln -s % $ODIR/output/facets
+
+mkdir -p $ODIR/docs/inputs
+ln -s $PDIR/*_request.txt $ODIR/docs/inputs
+ls $PDIR/inputs/* | xargs -n 1 -I % ln -s % $ODIR/docs/inputs
+ln -s $PDIR/log/settings $ODIR/docs/inputs
+
