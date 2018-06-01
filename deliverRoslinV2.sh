@@ -38,11 +38,11 @@ ls $PDIR/analysis/* | xargs -n 1 -I % ln -s % $ODIR/results
 #
 convert $PDIR/facets/*hisen*png $ODIR/results/${projectNo}.hisens.CNCF.pdf
 convert $PDIR/facets/*purity*png $ODIR/results/${projectNo}.purity.CNCF.pdf
-# Rscript --no-save $BDIR/bindRowsTSV.R \
-#     $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
+Rscript --no-save $BDIR/bindRowsTSV.R \
+    $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
 
-# Rscript --no-save $BDIR/bindRowsTSV.R \
-#     $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
+Rscript --no-save $BDIR/bindRowsTSV.R \
+    $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
 
 ln -s $PDIR/portal $ODIR/output
 
@@ -64,7 +64,7 @@ mkdir -p $ODIR/output/qc
 ls $PDIR/qc/*.txt | fgrep -v printreads | xargs -n 1 -I % ln -s % $ODIR/output/qc
 
 mkdir -p $ODIR/output/maf
-ls $PDIR/maf/*.txt | xargs -n 1 -I % ln -s % $ODIR/output/maf
+ls $PDIR/maf/* | xargs -n 1 -I % ln -s % $ODIR/output/maf
 
 mkdir -p $ODIR/output/vcf
 ls $PDIR/vcf/* | xargs -n 1 -I % ln -s % $ODIR/output/vcf
