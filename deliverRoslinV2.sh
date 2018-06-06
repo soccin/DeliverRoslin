@@ -27,38 +27,48 @@ ODIR=$ODIR/$projectNo
 echo $ODIR
 mkdir -p $ODIR/bams
 mkdir -p $ODIR/docs
-mkdir -p $ODIR/results
+mkdir -p $ODIR/results/variants
+mkdir -p $ODIR/results/copyNumber
+mkdir -p $ODIR/results/rearrangments
 mkdir -p $ODIR/output
 
 ls $PDIR/bam/*.ba? | xargs -n 1 -I % ln -s % $ODIR/bams
-ls $PDIR/analysis/* | xargs -n 1 -I % ln -s % $ODIR/results
+
+Rscript --no-save $BDIR/makeResultsMAF.R \
+    $PDIR/portal/data_mutations_extended.txt \
+    $PDIR/analysis/${projectNo}.muts.maf \
+    $ODIR/results/variants/${projectNo}.muts.dmp.maf
 
 #
 # FACETS Stuff
 #
-convert $PDIR/facets/*hisen*png $ODIR/results/${projectNo}.hisens.CNCF.pdf
-convert $PDIR/facets/*purity*png $ODIR/results/${projectNo}.purity.CNCF.pdf
+convert $PDIR/facets/*hisen*png $ODIR/results/copyNumber/${projectNo}.hisens.CNCF.pdf
+convert $PDIR/facets/*purity*png $ODIR/results/copyNumber/${projectNo}.purity.CNCF.pdf
 Rscript --no-save $BDIR/bindRowsTSV.R \
-    $ODIR/results/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
+    $ODIR/results/copyNumber/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
 
 Rscript --no-save $BDIR/bindRowsTSV.R \
-    $ODIR/results/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
-
-ln -s $PDIR/portal $ODIR/output
+    $ODIR/results/copyNumber/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
 
 Rscript --no-save $BDIR/collectFacetsOUT.R \
-    $ODIR/results/${projectNo}.purity \
+    $ODIR/results/copyNumber/${projectNo}.purity \
     $PDIR/facets/*purity.out
 
 Rscript --no-save $BDIR/collectFacetsOUT.R \
-    $ODIR/results/${projectNo}.hisens \
+    $ODIR/results/copyNumber/${projectNo}.hisens \
     $PDIR/facets/*hisens.out
 
 #
 # Fusions
 #
 
-ln -s $PDIR/portal/data_fusions.txt $ODIR/results/${projectNo}.fusions.txt
+ln -s $PDIR/portal/data_fusions.txt $ODIR/results/rearrangments/${projectNo}.fusions.txt
+
+#
+# Output
+#
+
+ln -s $PDIR/portal $ODIR/output
 
 mkdir -p $ODIR/output/qc
 ls $PDIR/qc/*.txt | fgrep -v printreads | xargs -n 1 -I % ln -s % $ODIR/output/qc
