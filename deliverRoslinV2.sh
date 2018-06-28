@@ -37,7 +37,9 @@ ls $PDIR/bam/*.ba? | xargs -n 1 -I % ln -s % $ODIR/bams
 Rscript --no-save $BDIR/makeResultsMAF.R \
     $PDIR/portal/data_mutations_extended.txt \
     $PDIR/analysis/${projectNo}.muts.maf \
-    $ODIR/results/variants/${projectNo}.muts.dmp.maf
+    $ODIR/results/variants/${projectNo}.muts.portal.maf
+
+ln -s $PDIR/analysis/${projectNo}.muts.maf $ODIR/results/variants/${projectNo}.muts.analysis.maf
 
 #
 # FACETS Stuff
