@@ -2,6 +2,20 @@ suppressPackageStartupMessages(require(tidyverse))
 suppressPackageStartupMessages(require(magrittr))
 
 #################################################################
+write.tsv=function (dd, filename, row.names = T, col.names = NA, na = "NA",
+    append = F)
+{
+    if (!is.data.frame(dd)) {
+        dd <- data.frame(dd, check.names = F)
+    }
+    if (!row.names) {
+        col.names = T
+    }
+    write.table(dd, file = filename, sep = "\t", quote = FALSE,
+        col.names = col.names, row.names = row.names, na = na,
+        append = append)
+}
+
 #################################################################
 
 readFacetsOutFile <- function(outFile) {
@@ -45,7 +59,11 @@ sampleTbl <- tbl %>% select(sampleFields)
 parameterTbl <- tbl %>%
 	select(commonFields) %>%
 	distinct %>%
-	as.data.frame %>% t
-colnames(parameterTbl)=c("Setting")
-write.csv(parameterTbl,paste0(outFileTmpl,".Parameters.out"))
-write.csv(sampleTbl,paste0(outFileTmpl,".SamplesValues.out"),row.names=F)
+	as.data.frame %>%
+	t %>%
+	as.data.frame %>%
+	rownames_to_column %>%
+	rename(Parameter=rowname,Setting=V1)
+
+write.tsv(parameterTbl,paste0(outFileTmpl,".Parameters.out"),row.names=F)
+write.tsv(sampleTbl,paste0(outFileTmpl,".SamplesValues.out"),row.names=F)
