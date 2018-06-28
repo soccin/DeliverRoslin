@@ -65,5 +65,5 @@ parameterTbl <- tbl %>%
 	rownames_to_column %>%
 	rename(Parameter=rowname,Setting=V1)
 
-write.tsv(parameterTbl,paste0(outFileTmpl,".Parameters.out"),row.names=F)
-write.tsv(sampleTbl,paste0(outFileTmpl,".SamplesValues.out"),row.names=F)
+write.tsv(parameterTbl,paste0(outFileTmpl,".parameters.out"),row.names=F)
+write.tsv(sampleTbl,paste0(outFileTmpl,".samplesValues.out"),row.names=F)

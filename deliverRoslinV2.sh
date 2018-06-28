@@ -42,21 +42,16 @@ Rscript --no-save $BDIR/makeResultsMAF.R \
 #
 # FACETS Stuff
 #
-convert $PDIR/facets/*hisen*png $ODIR/results/copyNumber/${projectNo}.hisens.CNCF.pdf
-convert $PDIR/facets/*purity*png $ODIR/results/copyNumber/${projectNo}.purity.CNCF.pdf
-Rscript --no-save $BDIR/bindRowsTSV.R \
-    $ODIR/results/copyNumber/${projectNo}.purity.cncf.txt $PDIR/facets/*purity*.cncf.txt
-
+convert $PDIR/facets/*hisen*png $ODIR/results/copyNumber/${projectNo}.hisens.cncf.pdf
 Rscript --no-save $BDIR/bindRowsTSV.R \
     $ODIR/results/copyNumber/${projectNo}.hisens.cncf.txt $PDIR/facets/*hisens*.cncf.txt
 
 Rscript --no-save $BDIR/collectFacetsOUT.R \
-    $ODIR/results/copyNumber/${projectNo}.purity \
-    $PDIR/facets/*purity.out
-
-Rscript --no-save $BDIR/collectFacetsOUT.R \
     $ODIR/results/copyNumber/${projectNo}.hisens \
     $PDIR/facets/*hisens.out
+
+ln -s $PDIR/analysis/${projectNo}.gene.cna.txt $ODIR/results/copyNumber/${projectNo}.hisens.gene.cna.txt
+ln -s $PDIR/analysis/${projectNo}.seg.cna.txt $ODIR/results/copyNumber/${projectNo}.hisens.seg.cna.txt
 
 #
 # Fusions
