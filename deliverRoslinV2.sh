@@ -87,7 +87,7 @@ ln -s $PDIR/*_request.txt $ODIR/docs/inputs
 ls $PDIR/inputs/* | xargs -n 1 -I % ln -s % $ODIR/docs/inputs
 ln -s $PDIR/log/settings $ODIR/docs/inputs
 
-cp $BDIR/manifest.pdf $ODIR/docs
+cp $BDIR/manifest_v2.2.2.pdf $ODIR/docs
 
 mkdir -p $ODIR/docs/qc
 ln -s $PDIR/qc/*_QC_Report.pdf $ODIR/docs/qc
